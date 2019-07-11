@@ -5,7 +5,7 @@ OAuth example resource server
 
 spec
 
-java
-postgreSQL
-JPA
+java<br/>
+postgreSQL<br/>
+JPA<br/>
 Spring boot
