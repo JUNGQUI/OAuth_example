@@ -4,13 +4,12 @@ import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Data
 @Entity
-@Table(name = OAuthToken.TABLE_NAME)
-public class OAuthToken {
-    protected static final String TABLE_NAME = "oauth_token";
+@Table(name=User.TABLE_NAME)
+public class User {
+    protected static final String TABLE_NAME = "user";
 
     @Id
     @Column(length = 36)
@@ -18,12 +17,6 @@ public class OAuthToken {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
-    private String code;
-    private String accessToken;
-    private String refreshToken;
-
-    private Date expire;
-    private int expiresIn;
-
-    private Date createdDate;
+    private String loginId;
+    private String password;
 }
