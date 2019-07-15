@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @Table(name=User.TABLE_NAME)
 public class User {
-    protected static final String TABLE_NAME = "user";
+    protected static final String TABLE_NAME = "oauth_user";
 
     @Id
     @Column(length = 36)

@@ -26,12 +26,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/resources/**").antMatchers("/webjars/**");
     }
 
-    @Autowired
-    public void configure(AuthenticationManagerBuilder auth, PasswordEncoder passwordEncoder) throws Exception {
-        auth.inMemoryAuthentication()
-                .passwordEncoder(passwordEncoder)
-                .withUser("jklee")
-                .password(passwordEncoder.encode("password"))
-                .roles("USER");
-    }
 }
