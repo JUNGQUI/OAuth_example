@@ -4,5 +4,5 @@ import javax.transaction.Transactional;
 
 @Transactional
 public interface IUserService {
-    boolean checkPassword(String userName);
+    boolean checkPassword(String id, String password);
 }

@@ -15,10 +15,16 @@
     </script>
 </head>
 <body>
-    ID : <input type="text" placeholder="ID"/><br/>
-    PW : <input type="password" placeholder="PASSWORD"/><br/>
+<div>
+    <label>ID : <input type="text" placeholder="ID"/></label><br/>
+    <label>PW : <input type="password" placeholder="PASSWORD"/></label><br/>
     <button id="btnLogin" type="button">로그인</button>
 </div>
+
+<input type="hidden" name="redirectURI"/>
+<input type="hidden" name="clientId"/>
+<input type="hidden" name="state"/>
+<input type="hidden" name="scope"/>
 
 </body>
 </html>

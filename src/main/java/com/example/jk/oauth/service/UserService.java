@@ -17,9 +17,11 @@ public class UserService implements IUserService {
         this.userRepository = userRepository;
     }
 
+
+
     @Override
-    public boolean checkPassword(String userName) {
-        User user = userRepository.findByLoginId(userName);
-        return passwordEncoder.matches("password", user.getPassword());
+    public boolean checkPassword(String id, String password) {
+        User user = userRepository.findByLoginId(id);
+        return passwordEncoder.matches(password, user.getPassword());
     }
 }
