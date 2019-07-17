@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
@@ -19,10 +19,10 @@ import java.util.UUID;
 @Controller
 public class TokenController {
 
-    @Value("${oauth.uri}")
+    @Value("${oauth.url}")
     private String OAUTH_URI;
 
-    @Value("${oauth.context}")
+    @Value("${server.servlet.context-path}")
     private String CONTEXT_PATH;
 
     private final ITokenService tokenService;
@@ -51,10 +51,10 @@ public class TokenController {
     }
 
     @PostMapping(value = "/token")
-    public void token(@RequestParam(value="client_id") String clientId,
-                               @RequestParam(value="grant_type") String grantType,
-                               @RequestParam(value="code", required = false) String code,
-                               @RequestParam(value="refresh_token", required = false) String refreshToken,
+    public void token(@RequestParam(value = "client_id") String clientId,
+                               @RequestParam(value = "grant_type") String grantType,
+                               @RequestParam(value = "code", required = false) String code,
+                               @RequestParam(value = "refresh_token", required = false) String refreshToken,
                                HttpServletResponse response) throws IOException {
         try {
             OAuthToken token;
@@ -69,17 +69,17 @@ public class TokenController {
                     tokenUtil.responseAsJson(response, tokenUtil.convert(token));
                     break;
                 default:
-                    response.sendError(400, "Invalid grant type.");
+                    response.sendError(400, "invalid_grant_type");
                     break;
             }
         } catch (Exception ex) {
             switch (grantType) {
                 case "authorization_code":
-                    response.sendError(400, "Invalid code.");
+                    response.sendError(400, "invalid_code");
 
                     break;
                 case "refresh_token":
-                    response.sendError(400, "Invalid refresh token.");
+                    response.sendError(400, "invalid_refresh_code");
                     break;
                 default:
                     response.sendError(503, "OAuth server Internal Server Error.");
@@ -89,10 +89,10 @@ public class TokenController {
     }
 
     @PostMapping(value="/code")
-    public void code (@RequestParam(value="clientId") String clientId,
-                      @RequestParam(value="state") String state,
-                      @RequestParam(value="redirectURI") String redirectURI,
-                      @RequestParam(value="scope") String scope, HttpServletResponse response) throws IOException {
+    public void code (@RequestParam(value = "clientId") String clientId,
+                      @RequestParam(value = "state") String state,
+                      @RequestParam(value = "redirectURI") String redirectURI,
+                      @RequestParam(value = "scope") String scope, HttpServletResponse response) throws IOException {
         try {
             String code = UUID.randomUUID().toString().replace("-", "");
 
@@ -101,6 +101,15 @@ public class TokenController {
             response.sendRedirect(redirectURI + "?code=" + code + "&state=" + state);
         } catch (Exception ex) {
             response.sendError(400, "invalid code");
+        }
+    }
+
+    @PostMapping(value = "/check")
+    public void check(@RequestHeader(value = "Authorization") String authorization) {
+        try {
+            System.out.println("J Tag");
+        } catch (Exception ex) {
+            System.out.println("J Tag");
         }
     }
 }

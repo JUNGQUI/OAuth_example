@@ -12,15 +12,11 @@ public class ResourceServerConfig implements ResourceServerConfigurer {
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-        // 필요 없음
+
     }
 
     @Override
-    public void configure(HttpSecurity security) throws Exception {
-        security.authorizeRequests()
-                .antMatchers("/**").permitAll()
-                .and().exceptionHandling().accessDeniedPage("/login")
-                .and().authorizeRequests().antMatchers("/oauth/**").authenticated();
+    public void configure(HttpSecurity http) throws Exception {
+
     }
 }
-
