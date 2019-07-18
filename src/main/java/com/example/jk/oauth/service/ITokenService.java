@@ -6,9 +6,9 @@ import javax.transaction.Transactional;
 
 @Transactional
 public interface ITokenService {
-    void save(String code);
+    OAuthToken save(String code);
 
-    void update(OAuthToken token);
+    OAuthToken update(OAuthToken token);
 
     OAuthToken getTokenByCode(String code);
 

@@ -1,8 +1,8 @@
 package com.example.jk.oauth.service;
 
 import com.example.jk.oauth.entity.User;
+import com.example.jk.oauth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,5 +38,23 @@ public class UserService implements IUserService {
     public boolean checkPassword(String id, String password) {
         User user = userRepository.findByLoginId(id);
         return passwordEncoder.matches(password, user.getPassword());
+    }
+
+    @Override
+    public User get(String id) {
+        return userRepository.findByLoginId(id);
+    }
+
+    @Override
+    public User getByAccessToken(String accessToken) {
+        return userRepository.findByAccessToken(accessToken);
+    }
+
+    @Override
+    public void updateAccessToken(String beforeToken, String afterToken) {
+        User user = userRepository.findByAccessToken(beforeToken);
+
+        user.setAccessToken(afterToken);
+        userRepository.save(user);
     }
 }

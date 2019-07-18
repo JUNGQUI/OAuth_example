@@ -1,18 +1,17 @@
 package com.example.jk.oauth.service;
 
 import com.example.jk.oauth.entity.OAuthToken;
+import com.example.jk.oauth.repository.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 import java.util.UUID;
 
 @Service
 public class TokenService implements ITokenService {
 
-    private final static Random random = new Random();
     private static final int expires_in = 30*24*60*60;
 
     private final TokenRepository tokenRepository;
@@ -23,7 +22,7 @@ public class TokenService implements ITokenService {
     }
 
     @Override
-    public void save(String code) {
+    public OAuthToken save(String code) {
         OAuthToken token = new OAuthToken();
 
         String accessToken = UUID.randomUUID().toString();
@@ -40,10 +39,12 @@ public class TokenService implements ITokenService {
         token.setRefreshToken(refreshToken);
 
         tokenRepository.save(token);
+
+        return token;
     }
 
     @Override
-    public void update(OAuthToken token) {
+    public OAuthToken update(OAuthToken token) {
         String accessToken = UUID.randomUUID().toString();
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.SECOND, expires_in);
@@ -51,6 +52,8 @@ public class TokenService implements ITokenService {
         token.setExpire(calendar.getTime());
         token.setExpiresIn(expires_in);
         token.setAccessToken(accessToken);
+
+        return token;
     }
 
     @Override

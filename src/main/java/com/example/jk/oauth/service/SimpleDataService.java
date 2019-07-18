@@ -2,6 +2,7 @@ package com.example.jk.oauth.service;
 
 import com.example.jk.oauth.entity.SimpleData;
 import com.example.jk.oauth.entity.User;
+import com.example.jk.oauth.repository.SimpleDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

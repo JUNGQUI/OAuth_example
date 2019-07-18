@@ -3,10 +3,9 @@ package com.example.jk.oauth.controller;
 import com.example.jk.oauth.entity.JsonResult;
 import com.example.jk.oauth.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping(value="/login")
@@ -23,6 +22,10 @@ public class LoginController {
     public JsonResult loginCheck (@RequestParam(value = "id") String id,
                                   @RequestParam(value = "password") String password) {
         try {
+            if (id == null || password == null) {
+                return JsonResult.failure("id, password 가 없습니다.");
+            }
+
             boolean result = userService.checkPassword(id, password);
 
             if (result) {

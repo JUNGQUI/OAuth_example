@@ -6,36 +6,11 @@
     <title>OAuth login</title>
 
     <script th:src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
-    <script type="application/javascript">
-        $('#btnLogin').click(function () {
-            let params = {
-                'id' : $('#id').val(),
-                'password': $('#password').val()
-            };
-
-            $.ajax({
-                type: 'POST',
-                url : [[${contextPath}]] + '/login/check',
-                contentType: 'application-x-www-form-urlencoded',
-                data : params,
-                success : function(data) {
-                    if (data.data) {
-                        window.href='';
-                    } else {
-                        alert(data.message);
-                    }
-                },
-                error : function(jqXHR, textStatus, message) {
-                    alert(message);
-                }
-            });
-        });
-    </script>
 </head>
 <body>
 <div>
     <label>ID : <input id="id" type="text" placeholder="ID"/></label><br/>
-    <label>PW : <input password="password" type="password" placeholder="PASSWORD"/></label><br/>
+    <label>PW : <input id="password" type="password" placeholder="PASSWORD"/></label><br/>
     <button id="btnLogin" type="button">로그인</button>
 </div>
 
@@ -45,6 +20,48 @@
     <input type="hidden" name="state"/>
     <input type="hidden" name="scope"/>
 </form>
+
+<script type="application/javascript" th:inline="javascript">
+    $('#btnLogin').click(function () {
+        let params = {
+            'id' : $('#id').val(),
+            'password': $('#password').val()
+        };
+
+        $.ajax({
+            type: 'POST',
+            url : [[${contextPath}]] + '/login/check',
+            contentType: 'application/x-www-form-urlencoded',
+            data : params,
+            success: function(data) {
+                if (data.success) {
+                    $.ajax({
+                        type:'POST',
+                        url:[[${contextPath}]] + '/code',
+                        contentType: 'application/x-www-form-urlencoded',
+                        data:{
+                            clientId: [[${clientId}]],
+                            state: [[${state}]],
+                            redirectURI: [[${redirectURI}]],
+                            scope: [[${scope}]]
+                        },
+                        success: function (data) {
+                            // do nothing
+                        },
+                        error: function (jqXHR, textStatus, message) {
+                            // do nothing
+                        }
+                    });
+                } else {
+                    alert(data.message);
+                }
+            },
+            error: function(jqXHR, textStatus, message) {
+                alert(message);
+            }
+        });
+    });
+</script>
 
 </body>
 </html>

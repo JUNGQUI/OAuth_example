@@ -1,7 +1,7 @@
 package com.example.jk.oauth;
 
 import com.example.jk.oauth.entity.User;
-import com.example.jk.oauth.service.UserRepository;
+import com.example.jk.oauth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -25,6 +25,9 @@ public class InitData implements ApplicationRunner {
         User user = new User();
         user.setLoginId("jklee");
         user.setPassword(passwordEncoder.encode("password"));
-        userRepository.save(user);
+
+        if (userRepository.findByLoginId("jklee") == null) {
+            userRepository.save(user);
+        }
     }
 }

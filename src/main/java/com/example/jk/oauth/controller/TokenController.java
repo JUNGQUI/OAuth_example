@@ -1,15 +1,16 @@
 package com.example.jk.oauth.controller;
 
 import com.example.jk.oauth.entity.OAuthToken;
+import com.example.jk.oauth.entity.User;
 import com.example.jk.oauth.service.ITokenService;
-import com.example.jk.oauth.service.TokenUtil;
+import com.example.jk.oauth.service.IUserService;
+import com.example.jk.oauth.Util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
@@ -20,18 +21,20 @@ import java.util.UUID;
 public class TokenController {
 
     @Value("${oauth.url}")
-    private String OAUTH_URI;
+    private String oauthURL;
 
     @Value("${server.servlet.context-path}")
-    private String CONTEXT_PATH;
+    private String contextPath;
 
     private final ITokenService tokenService;
     private final TokenUtil tokenUtil;
+    private final IUserService userService;
 
     @Autowired
-    public TokenController(ITokenService tokenService, TokenUtil tokenUtil) {
+    public TokenController(ITokenService tokenService, TokenUtil tokenUtil, IUserService userService) {
         this.tokenService = tokenService;
         this.tokenUtil = tokenUtil;
+        this.userService = userService;
     }
 
     @GetMapping(value = "/authorize")
@@ -41,11 +44,13 @@ public class TokenController {
                           @RequestParam(value = "response_type") String responseType,
                           @RequestParam(value = "scope") String scope, Model model) {
 
+        // 원래대로 라면 client-id, response-type 등으로 인증
         model.addAttribute("clientId", clientId);
         model.addAttribute("state", state);
         model.addAttribute("redirectURI", redirectURI);
         model.addAttribute("responseType", responseType);
         model.addAttribute("scope", scope);
+        model.addAttribute("contextPath", contextPath);
 
         return "login";
     }
@@ -66,6 +71,10 @@ public class TokenController {
                     break;
                 case "refresh_token":
                     token = tokenService.getTokenByRefresh(refreshToken);
+                    // 변경 전 user 가져오고 갱신
+                    String beforeToken = token.getAccessToken();
+                    token = tokenService.update(token);
+                    userService.updateAccessToken(beforeToken, token.getAccessToken());
                     tokenUtil.responseAsJson(response, tokenUtil.convert(token));
                     break;
                 default:
@@ -76,13 +85,12 @@ public class TokenController {
             switch (grantType) {
                 case "authorization_code":
                     response.sendError(400, "invalid_code");
-
                     break;
                 case "refresh_token":
                     response.sendError(400, "invalid_refresh_code");
                     break;
                 default:
-                    response.sendError(503, "OAuth server Internal Server Error.");
+                    response.sendError(500, "OAuth server Internal Server Error.");
                     break;
             }
         }
@@ -92,24 +100,20 @@ public class TokenController {
     public void code (@RequestParam(value = "clientId") String clientId,
                       @RequestParam(value = "state") String state,
                       @RequestParam(value = "redirectURI") String redirectURI,
-                      @RequestParam(value = "scope") String scope, HttpServletResponse response) throws IOException {
+                      @RequestParam(value = "scope") String scope,
+                      @RequestParam(value = "loginId") String loginId,
+                      HttpServletResponse response) throws IOException {
         try {
             String code = UUID.randomUUID().toString().replace("-", "");
 
-            tokenService.save(code);
+            OAuthToken token = tokenService.save(code);
+            User user = userService.get(loginId);
+
+            user.setAccessToken(token.getAccessToken());
 
             response.sendRedirect(redirectURI + "?code=" + code + "&state=" + state);
         } catch (Exception ex) {
             response.sendError(400, "invalid code");
-        }
-    }
-
-    @PostMapping(value = "/check")
-    public void check(@RequestHeader(value = "Authorization") String authorization) {
-        try {
-            System.out.println("J Tag");
-        } catch (Exception ex) {
-            System.out.println("J Tag");
         }
     }
 }

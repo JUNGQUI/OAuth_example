@@ -1,4 +1,4 @@
-package com.example.jk.oauth.service;
+package com.example.jk.oauth.Util;
 
 import com.example.jk.oauth.entity.OAuthToken;
 import com.example.jk.oauth.entity.OAuthTokenDTO;

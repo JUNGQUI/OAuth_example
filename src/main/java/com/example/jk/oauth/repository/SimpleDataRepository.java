@@ -1,4 +1,4 @@
-package com.example.jk.oauth.service;
+package com.example.jk.oauth.repository;
 
 import com.example.jk.oauth.entity.SimpleData;
 import org.springframework.data.jpa.repository.JpaRepository;
