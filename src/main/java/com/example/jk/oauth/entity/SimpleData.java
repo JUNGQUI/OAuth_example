@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @Table(name=SimpleData.TABLE_NAME)
 public class SimpleData {
-    protected static final String TABLE_NAME = "simple_data";
+    protected static final String TABLE_NAME = "oauth_simple_data";
 
     @Id
     @Column(length = 36)
@@ -18,6 +18,6 @@ public class SimpleData {
     private String id;
     private String message;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = User.class)
     private User user;
 }

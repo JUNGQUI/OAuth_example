@@ -1,9 +1,11 @@
 package com.example.jk.oauth.service;
 
+import com.example.jk.oauth.Util.ResourceUtil;
 import com.example.jk.oauth.entity.OAuthToken;
 import com.example.jk.oauth.repository.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -15,10 +17,12 @@ public class TokenService implements ITokenService {
     private static final int expires_in = 30*24*60*60;
 
     private final TokenRepository tokenRepository;
+    private final ResourceUtil resourceUtil;
 
     @Autowired
-    public TokenService(TokenRepository tokenRepository) {
+    public TokenService(TokenRepository tokenRepository, ResourceUtil resourceUtil) {
         this.tokenRepository = tokenRepository;
+        this.resourceUtil = resourceUtil;
     }
 
     @Override

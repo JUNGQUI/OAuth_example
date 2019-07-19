@@ -9,12 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -56,6 +56,7 @@ public class TokenController {
     }
 
     @PostMapping(value = "/token")
+    @ResponseBody
     public void token(@RequestParam(value = "client_id") String clientId,
                                @RequestParam(value = "grant_type") String grantType,
                                @RequestParam(value = "code", required = false) String code,
@@ -74,7 +75,7 @@ public class TokenController {
                     // 변경 전 user 가져오고 갱신
                     String beforeToken = token.getAccessToken();
                     token = tokenService.update(token);
-                    userService.updateAccessToken(beforeToken, token.getAccessToken());
+                    userService.updateByToken(beforeToken, token.getAccessToken());
                     tokenUtil.responseAsJson(response, tokenUtil.convert(token));
                     break;
                 default:
@@ -97,6 +98,7 @@ public class TokenController {
     }
 
     @PostMapping(value="/code")
+    @ResponseBody
     public void code (@RequestParam(value = "clientId") String clientId,
                       @RequestParam(value = "state") String state,
                       @RequestParam(value = "redirectURI") String redirectURI,
@@ -107,9 +109,7 @@ public class TokenController {
             String code = UUID.randomUUID().toString().replace("-", "");
 
             OAuthToken token = tokenService.save(code);
-            User user = userService.get(loginId);
-
-            user.setAccessToken(token.getAccessToken());
+            userService.updateByloginId(loginId, token.getAccessToken());
 
             response.sendRedirect(redirectURI + "?code=" + code + "&state=" + state);
         } catch (Exception ex) {

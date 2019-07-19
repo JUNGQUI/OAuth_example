@@ -6,6 +6,8 @@ import com.example.jk.oauth.repository.SimpleDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SimpleDataService implements ISimpleDataService {
 
@@ -25,8 +27,8 @@ public class SimpleDataService implements ISimpleDataService {
     }
 
     @Override
-    public void update (String id, String message) {
-        SimpleData simpleData = simpleDataRepository.findByUserId(id);
+    public void update(User user, String message) {
+        SimpleData simpleData = simpleDataRepository.findByUser(user);
 
         simpleData.setMessage(message);
         simpleDataRepository.save(simpleData);
@@ -34,6 +36,11 @@ public class SimpleDataService implements ISimpleDataService {
 
     @Override
     public SimpleData getByUser(User user) {
-        return simpleDataRepository.findByUserId(user.getId());
+        return simpleDataRepository.findByUser(user);
+    }
+
+    @Override
+    public List<SimpleData> listByUser(User user) {
+        return simpleDataRepository.findAllByUser(user);
     }
 }

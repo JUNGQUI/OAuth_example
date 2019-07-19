@@ -5,6 +5,7 @@ import com.example.jk.oauth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class UserService implements IUserService {
@@ -19,19 +20,23 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean save(String id, String password) {
+    public void saveOrUpdate(String id, String password, String accessToken) {
         User user = userRepository.findByLoginId(id);
 
-        if (user != null) {
-            return false;
-        } else {
+        if (user == null) {
             user = new User();
             user.setLoginId(id);
-            user.setPassword(password);
-            userRepository.save(user);
-
-            return true;
         }
+
+        if (StringUtils.hasText(password)) {
+            user.setPassword(passwordEncoder.encode(password));
+        }
+
+        if (StringUtils.hasText(accessToken)) {
+            user.setAccessToken(accessToken);
+        }
+
+        userRepository.save(user);
     }
 
     @Override
@@ -51,8 +56,16 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void updateAccessToken(String beforeToken, String afterToken) {
+    public void updateByToken(String beforeToken, String afterToken) {
         User user = userRepository.findByAccessToken(beforeToken);
+
+        user.setAccessToken(afterToken);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateByloginId(String loginId, String afterToken) {
+        User user = userRepository.findByLoginId(loginId);
 
         user.setAccessToken(afterToken);
         userRepository.save(user);

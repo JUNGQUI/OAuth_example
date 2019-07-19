@@ -28,6 +28,32 @@ public class SimpleDataController {
         this.resourceUtil = resourceUtil;
     }
 
+    @GetMapping(value = "/save")
+    public JsonResult save (
+            @RequestHeader(value = "Authorization") String authorization,
+            @RequestParam(value = "message") String message) {
+        try {
+            User user = tokenResponseComponent.getUserByToken(authorization);
+            simpleDataService.save(user, message);
+
+            return JsonResult.success();
+        } catch (Exception ex) {
+            return JsonResult.failure(ex.getMessage());
+        }
+    }
+
+    @GetMapping(value = "/update")
+    public JsonResult update (@RequestHeader(value = "Authorization") String authorization,
+                              @RequestParam(value = "message") String message) {
+        try {
+            User user = tokenResponseComponent.getUserByToken(authorization);
+            simpleDataService.update(user, message);
+
+            return JsonResult.success();
+        } catch (Exception ex) {
+            return JsonResult.failure(ex.getMessage());
+        }
+    }
 
     @GetMapping(value = "/get")
     public JsonResult get(
@@ -43,6 +69,24 @@ public class SimpleDataController {
 
             User user = userService.getByAccessToken(resourceUtil.extractToken(authorization));
             return JsonResult.success(resourceUtil.convert(simpleDataService.getByUser(user)));
+        } catch (Exception ex) {
+            return JsonResult.failure(ex.getMessage());
+        }
+    }
+
+    @GetMapping(value = "/list")
+    public JsonResult list(@RequestHeader(value = "Authorization") String authorization,
+                           HttpServletResponse response) {
+        try {
+            boolean result = tokenResponseComponent.checkToken(authorization);
+
+            if (!result) {
+                response.sendError(400, "invalid_token");
+                return JsonResult.failure("invalid_token");
+            }
+
+            User user = userService.getByAccessToken(resourceUtil.extractToken(authorization));
+            return JsonResult.success(resourceUtil.convert(simpleDataService.listByUser(user)));
         } catch (Exception ex) {
             return JsonResult.failure(ex.getMessage());
         }

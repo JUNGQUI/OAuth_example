@@ -6,7 +6,7 @@ import javax.transaction.Transactional;
 
 @Transactional
 public interface IUserService {
-    boolean save(String id, String password);
+    void saveOrUpdate(String id, String password, String accessToken);
 
     boolean checkPassword(String id, String password);
 
@@ -14,5 +14,7 @@ public interface IUserService {
 
     User getByAccessToken(String accessToken);
 
-    void updateAccessToken(String beforeToken, String afterToken);
+    void updateByToken(String beforeToken, String afterToken);
+
+    void updateByloginId(String loginId, String afterToken);
 }

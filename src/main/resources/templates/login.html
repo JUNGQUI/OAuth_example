@@ -14,11 +14,12 @@
     <button id="btnLogin" type="button">로그인</button>
 </div>
 
-<form action="/authorize">
-    <input type="hidden" name="redirectURI"/>
-    <input type="hidden" name="clientId"/>
-    <input type="hidden" name="state"/>
-    <input type="hidden" name="scope"/>
+<form id="formToken" action="/oauthEx/code" method="post">
+    <input type="hidden" name="redirectURI" th:value="${redirectURI}"/>
+    <input type="hidden" name="clientId" th:value="${clientId}"/>
+    <input type="hidden" name="state" th:value="${state}"/>
+    <input type="hidden" name="scope" th:value="${scope}"/>
+    <input type="hidden" name="loginId"/>
 </form>
 
 <script type="application/javascript" th:inline="javascript">
@@ -35,23 +36,8 @@
             data : params,
             success: function(data) {
                 if (data.success) {
-                    $.ajax({
-                        type:'POST',
-                        url:[[${contextPath}]] + '/code',
-                        contentType: 'application/x-www-form-urlencoded',
-                        data:{
-                            clientId: [[${clientId}]],
-                            state: [[${state}]],
-                            redirectURI: [[${redirectURI}]],
-                            scope: [[${scope}]]
-                        },
-                        success: function (data) {
-                            // do nothing
-                        },
-                        error: function (jqXHR, textStatus, message) {
-                            // do nothing
-                        }
-                    });
+                    $('input[name=loginId]').val($('#id').val());
+                    $('#formToken').submit();
                 } else {
                     alert(data.message);
                 }
