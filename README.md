@@ -14,7 +14,7 @@ OAuth example resource server
 >- postgreSQL<br/>
 >- JPA<br/>
 >- Spring boot <br/>
+>- No spring-security
 
 
-OAuth 2.0 framework uri : https://www.oauth.com <br/>
-필요하신 분은 해당 내역에서 규격을 살펴봐 주세요. 
+OAuth 2.0 framework uri : https://www.oauth.com <br/> 
