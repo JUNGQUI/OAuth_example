@@ -37,6 +37,18 @@ public class TokenController {
         this.userService = userService;
     }
 
+    /**
+     * authorization end-point. 각 client 별 end-point 를 다른 path 로 설정 시 path 변경 가능
+     *
+     * @param clientId     OAuth 2.0 parameter 의 client_id. client 를 정의하기 위한 random string. (예제 기준 jklee)
+     * @param state        client - OAuth server 간 통신 검증을 위한 상태 값
+     * @param redirectURI  client 가 code 를 전달 받을 redirect_uri
+     * @param responseType authorization_code 로 고정 (예제 기준)
+     * @param scope        client 에서 해당 code 를 통해 발급 받을 token 의 계정에 대한 권한
+     *                     ex : read,write 일 경우 해당 token으로 접근하는 계정은 resource server 에서 read 와 write 만 가능하다. 개발자 별 customizing 가능
+     * @param model        html page 에 전달 시 사용
+     * @return             해당 부분에선 login page 로 redirect 하기 위해 login 으로 주었음, 개발자 별로 customizing 가능
+     */
     @GetMapping(value = "/authorize")
     public String authorize(@RequestParam(value = "client_id") String clientId,
                           @RequestParam(value = "state") String state,
@@ -55,6 +67,17 @@ public class TokenController {
         return "login";
     }
 
+    /**
+     * token end-point. 각 client 별 end-point 를 다른 path 로 설정 시 path 변경 가능하며,
+     * refresh_token 을 통한 재발급 end-point 로 또한 쓰인다.
+     *
+     * @param clientId     OAuth 2.0 parameter 의 client_id. client 를 정의하기 위한 random string. (예제 기준 jklee)
+     * @param grantType    OAuth 2.0 parameter 의 grant_type, (예제 기준 authorization_code / refresh_token)
+     * @param code         grantType 이 authorization_code 일 경우 authorize end-point 를 통해 발급 받은 code
+     * @param refreshToken grantType 이 refresh_token 일 경우 token end-point 를 통해 발급 받은 refresh_token
+     * @param response     redirect 를 위한 HttpServletResponse
+     * @throws IOException Exception 대비 try/catch 구문
+     */
     @PostMapping(value = "/token")
     @ResponseBody
     public void token(@RequestParam(value = "client_id") String clientId,
@@ -97,6 +120,17 @@ public class TokenController {
         }
     }
 
+    /**
+     * OAuth 2.0 에는 없는 Spec, 내부 예제에서 code 발급 및 응답을 위한 method
+     *
+     * @param clientId     OAuth 2.0 parameter 의 client_id. client 를 정의하기 위한 random string. (예제 기준 jklee)
+     * @param state        client - OAuth server 간 통신 검증을 위한 상태 값
+     * @param redirectURI  client 가 code 를 전달 받을 redirect_uri
+     * @param scope        client 에서 해당 code 를 통해 발급 받을 token 의 계정에 대한 권한
+     * @param loginId      token - id link 를 위해 받는 parameter 로, 개발자 custom parameter
+     * @param response     redirect 를 위한 HttpServletResponse
+     * @throws IOException Exception 대비 try/catch 구문
+     */
     @PostMapping(value="/code")
     @ResponseBody
     public void code (@RequestParam(value = "clientId") String clientId,

@@ -3,6 +3,9 @@ package com.example.jk.oauth.entity;
 import lombok.Data;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
+/**
+ * JsonResponse format 에 대응하는 custom JsonResult Object
+ */
 @Data
 public class JsonResult {
     private boolean success;

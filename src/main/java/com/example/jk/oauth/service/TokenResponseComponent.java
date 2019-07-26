@@ -5,6 +5,10 @@ import com.example.jk.oauth.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Token 관련된 method 중 module 화 시킨 (시키면 좋겠다 싶은) method component 입니다.
+ * 역시 자세한 설명은 생략하겠습니다.
+ */
 @Component
 public class TokenResponseComponent {
 

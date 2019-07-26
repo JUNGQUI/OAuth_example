@@ -8,6 +8,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * SimpleData CRU 관련 Service 입니다.
+ *
+ * 보시면 다 아실터이니 자세한 설명은 생략하겠습니다.
+ */
 @Service
 public class SimpleDataService implements ISimpleDataService {
 

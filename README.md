@@ -38,8 +38,7 @@ OAuth 2.0 의 flow는
 Authorize with grant_type, authorization_code
 ---
 
-    grant_type=authorization_code 
-일 경우에 대한 Authorization 부분입니다.
+<code>grant_type=authorization_code</code> 일 경우에 대한 Authorization 부분입니다.
 
 ![Default OAuth 2.0 authorization_code flow](resource/img/default_oauth_authorize.png)
 
@@ -52,8 +51,8 @@ Resource Server 에 접근 하기 전, Authorization Server 를 통해 인증 �
 
 Authorize with grant_type, refresh_token
 ---
-    grant_type=refresh_token 
-일 경우에 대한 Authorization 부분입니다.
+
+<code>grant_type=refresh_token</code> 일 경우에 대한 Authorization 부분입니다.
 
 ![Default OAuth 2.0 refresh_token flow](resource/img/default_oauth_refresh_token.png)
 
@@ -62,7 +61,7 @@ Authorize with grant_type, refresh_token
 
 Access with access_token
 ---
-token 발급 이후 access_token 을 통해 Resource  Server 에 접근 시 flow 입니다.
+token 발급 이후 <code>access_token</code> 을 통해 Resource  Server 에 접근 시 flow 입니다.
 
 ![Default OAuth 2.0 access_token flow](resource/img/default_oauth_access_token.png)
 
@@ -79,7 +78,8 @@ check 결과에 따라 Resource 를 제공해주면 1회 호출에 대한 flow �
 
 ![Capsule OAuth 2.0 flow](resource/img/oauth_flow.png)
 
-Client 대신 User 와 Capsule 이 추가되었으며, 이해를 돕기 위해 각 method 별로 check token 을 넣었습니다.
+Client 대신 User 와 Capsule 이 추가되었으며, 전체 project 에 접근하는 request 가 /check_token 으로 접근하지 않고
+각 method 별로 check token 을 넣었습니다.
 
 또한 Authorize Server, Resource Server, Response Server 를 분리하지 않았습니다. 
 
@@ -92,5 +92,5 @@ OAuth 2.0 framework uri : https://www.oauth.com <br/>
 >- LoginController
 >- SimpleDataController
 
-각 controller 별 주석 참조 (진행중)
+각 controller 별 주석 참조
 

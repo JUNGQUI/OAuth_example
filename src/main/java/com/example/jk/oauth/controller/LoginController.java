@@ -18,6 +18,13 @@ public class LoginController {
         this.userService = userService;
     }
 
+    /**
+     * login 이후 계정이 맞는지 검증하는 method, OAuth 2.0 과 상관 없음
+     *
+     * @param id       login page 에서 전달받은 login id
+     * @param password login page 에서 전달받은 password
+     * @return JsonResult - Json format 에 맞는 custom object.
+     */
     @PostMapping(value = "/check")
     public JsonResult loginCheck (@RequestParam(value = "id") String id,
                                   @RequestParam(value = "password") String password) {
