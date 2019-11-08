@@ -108,10 +108,10 @@ public class TokenController {
         } catch (Exception ex) {
             switch (grantType) {
                 case "authorization_code":
-                    response.sendError(400, "invalid_code");
+                    response.sendError(401, "invalid_code");
                     break;
                 case "refresh_token":
-                    response.sendError(400, "invalid_refresh_code");
+                    response.sendError(401, "invalid_refresh_code");
                     break;
                 default:
                     response.sendError(500, "OAuth server Internal Server Error.");
