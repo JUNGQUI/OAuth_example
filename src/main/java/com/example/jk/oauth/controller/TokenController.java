@@ -20,9 +20,6 @@ import java.util.UUID;
 @Controller
 public class TokenController {
 
-    @Value("${oauth.url}")
-    private String oauthURL;
-
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
